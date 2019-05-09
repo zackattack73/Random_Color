@@ -11,7 +11,8 @@ class HexPickerPage extends StatefulWidget {
 }
 
 class HexPickerPageState extends State<HexPickerPage> {
-  bool state = true; // true attente new game, false Game en cours
+  bool state =
+      true; // true attente new game, false Game en cours pour display les boutons
   HSVColor color = new HSVColor.fromColor(Colors.blue);
   void onChanged(HSVColor value) => this.color = value;
   var rng = new Random();
@@ -28,13 +29,21 @@ class HexPickerPageState extends State<HexPickerPage> {
                 ),
                 body: new Column(children: <Widget>[
                   Visibility(
-                    child: RaisedButton(
-                        onPressed: () {
-                          newGame();
-                        },
-                        child: const Text('                         New game                         '),
-                        textTheme: ButtonTextTheme.primary,
-                        color: randomColor),
+                    child: Builder(
+                        builder: (context) => RaisedButton(
+                            onPressed: () {
+                              newGame();
+                              Navigator.push(
+                                context,
+                                new MaterialPageRoute(
+                                    builder: (context) => new ColorRoute(
+                                        background: randomColor)),
+                              );
+                            },
+                            child: const Text(
+                                '                         New game                         '),
+                            textTheme: ButtonTextTheme.primary,
+                            color: randomColor)),
                     visible: state,
                     maintainSize: true,
                     maintainAnimation: true,
@@ -52,14 +61,16 @@ class HexPickerPageState extends State<HexPickerPage> {
                               child: new Padding(
                                   padding: const EdgeInsets.all(10),
                                   child: new Column(
-                                      mainAxisSize: MainAxisSize.min,
+                                      //mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        new FloatingActionButton(
-                                          onPressed: () {
-                                            print(color.toColor());
-                                          },
-                                          backgroundColor: this.color.toColor(),
-                                        ),
+                                        Container(
+                                            width: 90.0,
+                                            height: 90.0,
+                                            child: new FloatingActionButton(
+                                              onPressed: () {},
+                                              backgroundColor:
+                                                  this.color.toColor(),
+                                            )),
                                         new Divider(),
 
                                         ///---------------------------------
@@ -89,14 +100,6 @@ class HexPickerPageState extends State<HexPickerPage> {
           rng.nextInt(256), rng.nextInt(256), rng.nextInt(256), 1.0);
       state = false;
     });
-    Fluttertoast.showToast(
-        msg: "                                                                                                        ",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.CENTER,
-        timeInSecForIos: 5,
-        backgroundColor: randomColor,
-        textColor: randomColor,
-        fontSize: 16.0);
   }
 
   verify() {
@@ -119,7 +122,7 @@ class HexPickerPageState extends State<HexPickerPage> {
         weightG * g.toDouble() * g.toDouble() +
         weightB * b.toDouble() * b.toDouble());
     Fluttertoast.showToast(
-        msg: ("Score : "+score.toString()),
+        msg: ("Score : " + score.toString()),
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
         timeInSecForIos: 5,
@@ -129,5 +132,22 @@ class HexPickerPageState extends State<HexPickerPage> {
     setState(() {
       state = true;
     });
+  }
+}
+
+class ColorRoute extends StatelessWidget {
+  final Color background;
+
+  ColorRoute({Key key, @required this.background}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Keep in mind this color"),
+        ),
+        body: new Container(
+          decoration: new BoxDecoration(color: background),
+        ));
   }
 }
