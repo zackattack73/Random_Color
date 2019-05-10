@@ -11,8 +11,7 @@ class HexPickerPage extends StatefulWidget {
 }
 
 class HexPickerPageState extends State<HexPickerPage> {
-  bool state =
-      true; // true attente new game, false Game en cours pour display les boutons
+  bool state = true;
   HSVColor color = new HSVColor.fromColor(Colors.blue);
   void onChanged(HSVColor value) => this.color = value;
   var rng = new Random();
@@ -21,34 +20,40 @@ class HexPickerPageState extends State<HexPickerPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: DefaultTabController(
+        home: new DefaultTabController(
             length: 2,
             child: Scaffold(
                 appBar: AppBar(
                   title: Text('Random Color Game'),
                 ),
                 body: new Column(children: <Widget>[
-                  Visibility(
-                    child: Builder(
-                        builder: (context) => RaisedButton(
-                            onPressed: () {
-                              newGame();
-                              Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => new ColorRoute(
-                                        background: randomColor)),
-                              );
-                            },
-                            child: const Text(
-                                '                         New game                         '),
-                            textTheme: ButtonTextTheme.primary,
-                            color: randomColor)),
-                    visible: state,
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                  ),
+                  state
+                      ? Builder(
+                          builder: (context) => RaisedButton(
+                              onPressed: () {
+                                newGame();
+                                Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => new ColorRoute(
+                                          background: randomColor)),
+                                );
+                              },
+                              child: Text(
+                                  "                         New Game                         "),
+                              textTheme: ButtonTextTheme.primary,
+                              color: randomColor))
+                      : Container(),
+                  !(state)
+                      ? Builder(
+                          builder: (context) => RaisedButton(
+                                onPressed: () {
+                                  verify();
+                                },
+                                child: Text(
+                                    "                             Verify                             "),
+                              ))
+                      : Container(),
                   new Divider(),
                   new Center(
                       child: new Container(
@@ -82,15 +87,6 @@ class HexPickerPageState extends State<HexPickerPage> {
 
                                         ///---------------------------------
                                       ]))))),
-                  new Divider(),
-                  Visibility(
-                      child: RaisedButton(
-                        onPressed: () {
-                          verify();
-                        },
-                        child: const Text('Verify'),
-                      ),
-                      visible: !state),
                 ]))));
   }
 
