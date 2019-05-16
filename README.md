@@ -1,6 +1,7 @@
 # Random Color
 An Android and iOS game.
 A color is display on the screen and then the player has to pick a color that is the most similar to the one displayed.
+Player need to have the lowest score.
 
 ![Screenshot of the game](screenshot_1557401458.png "Screenshot of the game")
 
